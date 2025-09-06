@@ -23,7 +23,7 @@ import {
 import { subjects } from "@/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { redirect } from "next/navigation";
-import { Mic, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 // --- Form schema ---
 const formSchema = z.object({
@@ -80,36 +80,6 @@ const CompanionForm = () => {
             )}
           />
 
-          {/* Subject */}
-          <FormField
-            control={form.control}
-            name="subject"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-slate-300">Subject</FormLabel>
-                <FormControl>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all capitalize">
-                      <SelectValue placeholder="Select the subject" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700 text-white">
-                      {subjects.map((subject) => (
-                        <SelectItem
-                          key={subject}
-                          value={subject}
-                          className="capitalize focus:bg-slate-700 focus:text-white"
-                        >
-                          {subject}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage className="text-red-400" />
-              </FormItem>
-            )}
-          />
-
           {/* Topic */}
           <FormField
             control={form.control}
@@ -131,18 +101,48 @@ const CompanionForm = () => {
             )}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8 place-items-stretch">
+            {/* Subject */}
+            <FormField
+              control={form.control}
+              name="subject"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-slate-300 mb-2">Subject</FormLabel>
+                  <FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all capitalize w-full">
+                        <SelectValue placeholder="Select subject" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                        {subjects.map((subject) => (
+                          <SelectItem
+                            key={subject}
+                            value={subject}
+                            className="capitalize focus:bg-slate-700 focus:text-white"
+                          >
+                            {subject}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-400 text-xs mt-1" />
+                </FormItem>
+              )}
+            />
+
             {/* Voice */}
             <FormField
               control={form.control}
               name="voice"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-slate-300">Voice</FormLabel>
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-slate-300 mb-2">Voice</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                        <SelectValue placeholder="Select the voice" />
+                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all w-full">
+                        <SelectValue placeholder="Select voice" />
                       </SelectTrigger>
                       <SelectContent className="bg-slate-800 border-slate-700 text-white">
                         <SelectItem value="male" className="focus:bg-slate-700">
@@ -157,7 +157,7 @@ const CompanionForm = () => {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage className="text-red-400" />
+                  <FormMessage className="text-red-400 text-xs mt-1" />
                 </FormItem>
               )}
             />
@@ -167,12 +167,12 @@ const CompanionForm = () => {
               control={form.control}
               name="style"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-slate-300">Style</FormLabel>
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-slate-300 mb-2">Style</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                        <SelectValue placeholder="Select the style" />
+                      <SelectTrigger className="bg-slate-800 border-slate-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all w-full">
+                        <SelectValue placeholder="Select style" />
                       </SelectTrigger>
                       <SelectContent className="bg-slate-800 border-slate-700 text-white">
                         <SelectItem
@@ -190,33 +190,33 @@ const CompanionForm = () => {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage className="text-red-400" />
+                  <FormMessage className="text-red-400 text-xs mt-1" />
+                </FormItem>
+              )}
+            />
+
+            {/* Duration */}
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-slate-300 mb-2">
+                    Duration (min)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="15"
+                      {...field}
+                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all w-full"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-400 text-xs mt-1" />
                 </FormItem>
               )}
             />
           </div>
-
-          {/* Duration */}
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-slate-300">
-                  Estimated session duration (minutes)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="15"
-                    {...field}
-                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  />
-                </FormControl>
-                <FormMessage className="text-red-400" />
-              </FormItem>
-            )}
-          />
 
           <Button
             type="submit"

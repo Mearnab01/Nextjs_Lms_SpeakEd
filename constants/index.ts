@@ -71,3 +71,21 @@ export const recentSessions = [
     color: "#34D399", // Emerald green
   },
 ];
+
+export const testimonials = [
+  {
+    text: "The voice companions transformed how I learn languages!",
+    name: "Sarah Chen",
+    role: "Language Student",
+  },
+  {
+    text: "Best investment in my education. The AI adapts perfectly to my learning style.",
+    name: "Marcus Johnson",
+    role: "Medical Student",
+  },
+  {
+    text: "My students are more engaged than ever with voice-based learning.",
+    name: "Dr. Emily Rodriguez",
+    role: "University Professor",
+  },
+];

@@ -213,6 +213,60 @@ body {
   .transcript-fade {
     @apply pointer-events-none absolute bottom-0 left-0 right-0 h-40 max-sm:h-20 bg-gradient-to-t from-background via-background/90 to-transparent z-10;
   }
+  /* styles/globals.css or in your tailwind directives */
+  .cl-pricingTable {
+    background: transparent !important;
+  }
+
+  .cl-planBox {
+    background: rgb(30 41 59 / 0.5) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgb(71 85 105 / 0.3) !important;
+    border-radius: 1rem !important;
+    transition: all 0.3s ease;
+  }
+
+  .cl-planBox:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+    border-color: rgb(59 130 246 / 0.5) !important;
+  }
+
+  .cl-planName {
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+  }
+
+  .cl-planPrice {
+    color: rgb(59 130 246) !important;
+    font-weight: 700 !important;
+  }
+
+  .cl-planDescription {
+    color: rgb(148 163 184) !important;
+  }
+
+  .cl-planButton {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+    border: none !important;
+    border-radius: 0.75rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .cl-planButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .cl-featureText {
+    color: rgb(203 213 225) !important;
+  }
+
+  .cl-checkIcon {
+    color: rgb(34 197 94) !important;
+  }
 }
 
 @layer utilities {

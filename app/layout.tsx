@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LayoutWrapper from "./LayoutWrapper";
+import { dark } from "@clerk/themes";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -27,11 +28,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ClerkProvider>
+      <ClerkProvider
+        appearance={{
+          baseTheme: dark,
+          variables: {
+            colorBackground: "#1e293b",
+            colorPrimary: "#60a5fa",
+            colorText: "#f8fafc",
+            colorTextSecondary: "#e2e8f0",
+            colorInputBackground: "#334155",
+            colorInputText: "#f8fafc",
+          },
+        }}
+      >
         <body className={`${bricolage.variable} antialiased bg-slate-900`}>
-          <Navbar />
           <LayoutWrapper>{children}</LayoutWrapper>
-          <Footer />
         </body>
       </ClerkProvider>
     </html>
