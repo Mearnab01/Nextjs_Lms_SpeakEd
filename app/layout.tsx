@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import LayoutWrapper from "./LayoutWrapper";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -23,7 +27,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bricolage.variable} antialiased`}>{children}</body>
+      <ClerkProvider>
+        <body className={`${bricolage.variable} antialiased bg-slate-900`}>
+          <Navbar />
+          <LayoutWrapper>{children}</LayoutWrapper>
+          <Footer />
+        </body>
+      </ClerkProvider>
     </html>
   );
 }
