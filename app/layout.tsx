@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LayoutWrapper from "./LayoutWrapper";
 import { dark } from "@clerk/themes";
+import { Toaster } from "@/components/ui/sonner";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -42,7 +43,12 @@ export default function RootLayout({
         }}
       >
         <body className={`${bricolage.variable} antialiased bg-slate-900`}>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <Navbar />
+          <LayoutWrapper>
+            {children}
+            <Toaster />
+          </LayoutWrapper>
+          <Footer />
         </body>
       </ClerkProvider>
     </html>

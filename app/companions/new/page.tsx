@@ -1,8 +1,12 @@
 import CompanionForm from "@/components/CompanionForm";
+import { auth } from "@clerk/nextjs/server";
 import { Mic } from "lucide-react";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const NewCompanion = () => {
+const NewCompanion = async () => {
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
   return (
     <main className="min-lg:w-1/2 min-md:w-2/3 items-center justify-center bg-transparent mt-20">
       <article className="w-full flex flex-col gap-4">

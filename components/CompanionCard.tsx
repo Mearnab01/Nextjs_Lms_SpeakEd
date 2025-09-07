@@ -49,7 +49,7 @@ const CompanionCard = ({
       <h2 className="text-xl font-bold text-white mb-2 group-hover:text-slate-100 transition-colors">
         {name}
       </h2>
-      <p className="text-slate-400 text-sm mb-4 line-clamp-2">{topic}</p>
+      <p className="text-slate-400 text-sm mb-4 truncate">{topic}</p>
 
       <div className="flex items-center gap-2 text-slate-400 mb-5">
         <Clock size={14} />

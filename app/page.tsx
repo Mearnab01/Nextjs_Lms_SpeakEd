@@ -1,17 +1,20 @@
 import CompanionCard from "@/components/CompanionCard";
 import CompanionsList from "@/components/CompanionsList";
 import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
-import { recentSessions } from "@/constants";
+// import { recentSessions } from "@/constants";
+import {
+  getAllCompanions,
+  getRecentSessions,
+} from "@/lib/actions/companion.actions";
+import { getSubjectColor } from "@/lib/utils";
 import { Mic } from "lucide-react";
 import React from "react";
 
-const Homepage = () => {
+const Homepage = async () => {
+  const companions = await getAllCompanions({ limit: 4 });
+  const recentSessionCompanions = (await getRecentSessions(10)).flat();
   return (
     <>
-      {" "}
-      <Navbar />
       <main className="min-h-screen mt-24 bg-transparent">
         <div className="flex items-center justify-center mb-8">
           <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
@@ -22,55 +25,25 @@ const Homepage = () => {
 
         <section className="home-section">
           <section className="home-section">
-            <CompanionCard
-              id="1"
-              name="Neura the Brainy Explorer"
-              topic="The Wonders of Quantum Physics"
-              subject="Science"
-              duration={45}
-              color="#A78BFA"
-              bookmarked={true}
-            />
-            <CompanionCard
-              id="2"
-              name="Codey the Logic Hacker"
-              topic="Building Your First JavaScript Game"
-              subject="Coding"
-              duration={30}
-              color="#F472B6"
-              bookmarked={false}
-            />
-            <CompanionCard
-              id="3"
-              name="Memo the Memory Keeper"
-              topic="The Rise and Fall of Ancient Empires"
-              subject="History"
-              duration={20}
-              color="#FBBF24" // Warm gold
-              bookmarked={false}
-            />
-            <CompanionCard
-              id="4"
-              name="Verba the Wordsmith"
-              topic="Mastering English Idioms & Expressions"
-              subject="Language"
-              duration={25}
-              color="#38BDF8" // Sky blue
-              bookmarked={false}
-            />
+            {companions.map((comp) => (
+              <CompanionCard
+                key={comp.id}
+                {...comp}
+                color={getSubjectColor(comp.subject)}
+              />
+            ))}
           </section>
         </section>
 
         <section className="home-section">
           <CompanionsList
             title="Recently completed Lessons"
-            companions={recentSessions}
+            companions={recentSessionCompanions}
             classNames="w-2/3 max-lg:w-full"
           />
           <CTA />
         </section>
       </main>
-      <Footer />
     </>
   );
 };

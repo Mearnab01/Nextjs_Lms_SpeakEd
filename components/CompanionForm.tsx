@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,8 +22,11 @@ import {
 } from "@/components/ui/select";
 import { subjects } from "@/constants";
 import { Textarea } from "@/components/ui/textarea";
-import { redirect } from "next/navigation";
-import { Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Loader, Sparkles } from "lucide-react";
+import { createCompanion } from "@/lib/actions/companion.actions";
+import { toast } from "sonner";
+import { useState } from "react";
 
 // --- Form schema ---
 const formSchema = z.object({
@@ -32,14 +35,16 @@ const formSchema = z.object({
   topic: z.string().min(1, { message: "Topic is required." }),
   voice: z.string().min(1, { message: "Voice is required." }),
   style: z.string().min(1, { message: "Style is required." }),
-  duration: z.number().min(1, { message: "Duration is required." }),
+  duration: z.coerce.number().min(1, { message: "Duration is required." }),
 });
 
 type CompanionFormValues = z.infer<typeof formSchema>;
 
 const CompanionForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<CompanionFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as Resolver<CompanionFormValues>,
     defaultValues: {
       name: "",
       subject: "",
@@ -51,10 +56,25 @@ const CompanionForm = () => {
   });
 
   const onSubmit: SubmitHandler<CompanionFormValues> = async (values) => {
-    console.log("Form submitted:", values);
-    // Example redirect if using API
-    // const companion = await createCompanion(values);
-    // if (companion) redirect(`/companions/${companion.id}`);
+    setIsLoading(true);
+    try {
+      const companion = await createCompanion(values);
+      console.log(companion);
+
+      if (companion.id) {
+        router.push(`/companions/${companion.id}`);
+      } else {
+        toast.error("Failed to create companion!");
+        console.error("Create companion returned null or undefined");
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.message || "Something went wrong while creating companion!"
+      );
+      console.error("Create companion error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -219,11 +239,21 @@ const CompanionForm = () => {
           </div>
 
           <Button
+            disabled={isLoading}
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg flex items-center justify-center gap-2 hover:cursor-pointer"
           >
-            <Sparkles className="h-5 w-5" />
-            Build Your Tutor
+            {isLoading ? (
+              <>
+                <Loader className="h-5 w-5 animate-spin mr-2" />
+                Building Companion
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-5 w-5 mr-2" />
+                Build Your Tutor
+              </>
+            )}
           </Button>
         </form>
       </Form>

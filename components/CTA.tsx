@@ -56,7 +56,7 @@ const Cta = () => {
           </div>
 
           <Link href="/companions/new">
-            <button className="group relative flex items-center gap-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-0.5 mt-20">
+            <button className="group relative flex items-center gap-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-0.5 mt-20 hover:cursor-pointer">
               <Plus
                 size={20}
                 className="group-hover:rotate-90 transition-transform duration-300"

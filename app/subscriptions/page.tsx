@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function SubscriptionPage() {
   return (
-    <main className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex justify-center items-center p-4">
+    <main className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex justify-center items-center p-4 mt-40">
       {/* Animated background elements */}
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-blue-500/10 to-transparent"></div>
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
@@ -41,7 +41,7 @@ export default function SubscriptionPage() {
         </div>
 
         {/* Pricing Table Container */}
-        <div className="bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-700/50 p-6 md:p-8 shadow-2xl">
+        <div className="bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-700/50 p-6 md:p-8 shadow-2xl z-20">
           <PricingTable />
         </div>
 
