@@ -17,11 +17,7 @@ const Homepage = async () => {
   const companions = await getAllCompanions({ limit: 4 });
   const recentSessionCompanions = (await getRecentSessions(10)).flat();
   const user = await currentUser();
-  const username =
-    user?.firstName ||
-    user?.lastName ||
-    `${user?.firstName}-${user?.lastName}` ||
-    "User";
+  const username = user?.firstName || user?.lastName;
   return (
     <>
       <main className="min-h-screen mt-24 bg-transparent">
