@@ -46,7 +46,9 @@ const Homepage = async () => {
 
         <section className="home-section">
           <CompanionsList
-            title={`${username}\u2019s recent Session`}
+            title={
+              username ? `${username}\u2019s recent session` : "Recent session"
+            }
             companions={recentSessionCompanions}
             classNames="w-2/3 max-lg:w-full"
           />
