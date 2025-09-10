@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import LayoutWrapper from "./LayoutWrapper";
 import { dark } from "@clerk/themes";
 import { Toaster } from "@/components/ui/sonner";
@@ -43,12 +41,10 @@ export default function RootLayout({
         }}
       >
         <body className={`${bricolage.variable} antialiased bg-slate-900`}>
-          <Navbar />
           <LayoutWrapper>
             {children}
             <Toaster position="top-right" />
           </LayoutWrapper>
-          <Footer />
         </body>
       </ClerkProvider>
     </html>
