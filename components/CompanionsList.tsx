@@ -11,7 +11,10 @@ import {
 import { cn, getSubjectColor } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Play, ArrowRight } from "lucide-react";
+import { Clock, Play, ArrowRight, Trash2, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { deleteCompanion } from "@/lib/actions/companion.actions";
+import { toast } from "sonner";
 
 interface Companion {
   id: string;
@@ -25,13 +28,31 @@ interface CompanionsListProps {
   title: string;
   companions?: Companion[];
   classNames?: string;
+  showDelete?: boolean;
 }
 
 const CompanionsList = ({
   title,
   companions,
   classNames,
+  showDelete,
 }: CompanionsListProps) => {
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  const handleDelete = async (companionId: string) => {
+    if (!confirm("Are you sure you want to delete this companion?")) return;
+
+    try {
+      setLoadingId(companionId);
+      await deleteCompanion(companionId);
+      toast.success("Companion deleted successfully!");
+      window.location.reload();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete companion.");
+    } finally {
+      setLoadingId(null);
+    }
+  };
   return (
     <article
       className={cn(
@@ -65,6 +86,11 @@ const CompanionsList = ({
               <TableHead className="text-slate-300 text-lg py-4 font-medium text-right pr-6">
                 Duration
               </TableHead>
+              {showDelete && (
+                <TableHead className="text-slate-300 text-lg py-4 font-medium text-right pr-6">
+                  Delete
+                </TableHead>
+              )}
             </TableRow>
           </TableHeader>
 
@@ -76,7 +102,7 @@ const CompanionsList = ({
                   className="border-b border-slate-800 last:border-b-0 group hover:bg-slate-800/30 transition-all duration-300"
                 >
                   {/* Lesson Name */}
-                  <TableCell className="pl-6 py-5">
+                  <TableCell className="pl-6 py-5 cursor-pointer">
                     <Link href={`/companions/${id}`}>
                       <div className="flex items-center gap-4">
                         {/* Icon */}
@@ -102,8 +128,10 @@ const CompanionsList = ({
                           <p className="font-semibold text-white text-lg group-hover:text-blue-300 transition-colors">
                             {name}
                           </p>
-                          <p className="text-slate-400 text-sm line-clamp-1">
-                            {topic}
+                          <p className="text-slate-400 text-sm">
+                            {topic.length > 50
+                              ? topic.substring(0, 50) + "..."
+                              : topic}
                           </p>
                         </div>
 
@@ -114,7 +142,7 @@ const CompanionsList = ({
                   </TableCell>
 
                   {/* Subject */}
-                  <TableCell className="py-5">
+                  <TableCell className="py-5 cursor-pointer">
                     <div className="flex items-center gap-2">
                       <div
                         className="subject-badge hidden md:block px-3 py-1 rounded-full text-sm font-medium text-white"
@@ -143,7 +171,7 @@ const CompanionsList = ({
                   </TableCell>
 
                   {/* Duration + Play Button */}
-                  <TableCell className="pr-6 py-5">
+                  <TableCell className="pr-6 py-5 cursor-pointer">
                     <div className="flex items-center gap-2 w-full justify-end">
                       <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg">
                         <Clock size={16} className="text-slate-400" />
@@ -162,6 +190,28 @@ const CompanionsList = ({
                       </Link>
                     </div>
                   </TableCell>
+
+                  {/* Delete */}
+                  {showDelete && (
+                    <TableCell className="pr-6 py-5 cursor-pointer">
+                      <div className="flex items-center gap-2 w-full justify-end">
+                        <button
+                          onClick={() => handleDelete(id)}
+                          className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg hover:bg-red-500/20 transition-colors"
+                          disabled={loadingId === id}
+                        >
+                          {loadingId === id ? (
+                            <Loader2
+                              size={16}
+                              className="text-red-400 animate-spin"
+                            />
+                          ) : (
+                            <Trash2 size={16} className="text-red-400" />
+                          )}
+                        </button>
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             ) : (

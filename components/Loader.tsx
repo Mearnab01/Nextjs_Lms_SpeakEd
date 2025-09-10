@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, AudioLines, Volume2 } from "lucide-react";
+import { GraduationCap, AudioLines, Volume2 } from "lucide-react";
 
 interface LoaderProps {
   isLoading?: boolean;
@@ -40,7 +40,7 @@ const Loader = ({
                 ease: "easeInOut",
               }}
             >
-              <Mic className="h-16 w-16 text-blue-400" />
+              <GraduationCap className="h-16 w-16 text-blue-400" />
             </motion.div>
 
             {/* Surrounding voice waves */}

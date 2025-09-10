@@ -3,7 +3,7 @@ import {
   MessageSquare,
   Headphones,
   BookOpen,
-  Mic,
+  GraduationCap,
   Github,
   Twitter,
   Linkedin,
@@ -19,7 +19,7 @@ const Footer = () => {
           <div className="col-span-1 lg:col-span-2">
             <div className="flex items-center mb-4">
               <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg mr-3">
-                <Mic className="h-6 w-6 text-white" />
+                <GraduationCap className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 SpeakEd

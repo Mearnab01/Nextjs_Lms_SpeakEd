@@ -7,18 +7,19 @@ import {
   getRecentSessions,
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
-import { Mic } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import React from "react";
 
 const Homepage = async () => {
   const companions = await getAllCompanions({ limit: 4 });
   const recentSessionCompanions = (await getRecentSessions(10)).flat();
+
   return (
     <>
       <main className="min-h-screen mt-24 bg-transparent">
         <div className="flex items-center justify-center mb-8">
           <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-            <Mic className="h-5 w-5 text-white" />
+            <GraduationCap className="h-5 w-5 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white">Featured Guides</h1>
         </div>

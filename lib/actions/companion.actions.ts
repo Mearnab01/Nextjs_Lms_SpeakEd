@@ -1,17 +1,21 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { createSupabaseClient } from "../supabase";
 import { revalidatePath } from "next/cache";
 
 export const createCompanion = async (formData: CreateCompanion) => {
-  const { userId: author } = await auth();
+  const user = await currentUser();
   const supabase = createSupabaseClient();
-  console.log("AuthorId", author);
+
+  if (!user?.id) {
+    console.warn("Missing userId");
+    return null;
+  }
 
   const { data, error } = await supabase
     .from("companions")
-    .insert({ ...formData, author })
+    .insert({ ...formData, author: user.id })
     .select();
 
   if (error || !data)
@@ -49,6 +53,25 @@ export const getAllCompanions = async ({
   return companions;
 };
 
+export const deleteCompanion = async (companionId: string) => {
+  const { userId } = await auth();
+  const supabase = createSupabaseClient();
+
+  if (!userId) {
+    console.warn("Unauthorized: You must be logged in to delete a companion.");
+    return null;
+  }
+
+  const { error } = await supabase
+    .from("companions")
+    .delete()
+    .eq("id", companionId)
+    .eq("author", userId);
+  if (error) throw new Error(error.message);
+
+  return { success: true, message: "Companion deleted successfully!" };
+};
+
 export const getCompanion = async (id: string) => {
   const supabase = createSupabaseClient();
 
@@ -64,6 +87,9 @@ export const getCompanion = async (id: string) => {
 
 export const addToSessionHistory = async (companionId: string) => {
   const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized: You must be logged in");
+  }
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from("session_history").insert({
     companion_id: companionId,
@@ -116,6 +142,11 @@ export const getUserCompanions = async (userId: string) => {
 
 export const newCompanionPermissions = async () => {
   const { userId, has } = await auth();
+  if (!userId) {
+    throw new Error(
+      "Unauthorized: You must be logged in to delete a companion."
+    );
+  }
   const supabase = createSupabaseClient();
 
   let limit = 0;
@@ -145,9 +176,12 @@ export const newCompanionPermissions = async () => {
 };
 
 // Bookmarks
-export const addBookmark = async (companionId: string, path: string) => {
+/* export const addBookmark = async (companionId: string, path: string) => {
   const { userId } = await auth();
-  if (!userId) return;
+
+  if (!userId) {
+    throw new Error("Unauthorized: You must be logged in");
+  }
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from("bookmarks").insert({
     companion_id: companionId,
@@ -164,7 +198,11 @@ export const addBookmark = async (companionId: string, path: string) => {
 
 export const removeBookmark = async (companionId: string, path: string) => {
   const { userId } = await auth();
-  if (!userId) return;
+  if (!userId) {
+    throw new Error(
+      "Unauthorized: You must be logged in to delete a companion."
+    );
+  }
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("bookmarks")
@@ -172,13 +210,13 @@ export const removeBookmark = async (companionId: string, path: string) => {
     .eq("companion_id", companionId)
     .eq("user_id", userId);
   if (error) {
+    console.error("Remove bookmark error:", error);
     throw new Error(error.message);
   }
   revalidatePath(path);
   return data;
 };
 
-// It's almost the same as getUserCompanions, but it's for the bookmarked companions
 export const getBookmarkedCompanions = async (userId: string) => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
@@ -190,4 +228,4 @@ export const getBookmarkedCompanions = async (userId: string) => {
   }
   // We don't need the bookmarks data, so we return only the companions
   return data.map(({ companions }) => companions);
-};
+}; */

@@ -9,7 +9,6 @@ import { redirect } from "next/navigation";
 import {
   getUserCompanions,
   getUserSessions,
-  getBookmarkedCompanions,
 } from "@/lib/actions/companion.actions";
 import Image from "next/image";
 import CompanionsList from "@/components/CompanionsList";
@@ -21,6 +20,7 @@ import {
   Sparkles,
   BookOpen,
 } from "lucide-react";
+import { DeleteButton } from "@/components/DeleteButton";
 
 const Profile = async () => {
   const user = await currentUser();
@@ -29,8 +29,6 @@ const Profile = async () => {
 
   const companions = await getUserCompanions(user.id);
   const sessionHistory = (await getUserSessions(user.id)).flat();
-  // const bookmarkedCompanions = (await getBookmarkedCompanions(user.id)).flat();
-
   return (
     <main className="max-w-6xl mx-auto p-6 mt-40 bg-transparent">
       {/* Header Section */}
@@ -97,30 +95,38 @@ const Profile = async () => {
 
       {/* Accordion Sections */}
       <Accordion type="multiple" className="space-y-4">
-        {/* Bookmarked Companions */}
+        {/* My Companions*/}
         <AccordionItem
-          value="bookmarks"
+          value="companions"
           className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/30 overflow-hidden"
         >
-          <AccordionTrigger className="text-xl text-amber-200 font-semibold p-6 hover:bg-slate-700/20 transition-colors">
+          <AccordionTrigger className="text-xl text-purple-100 font-semibold p-6 hover:bg-slate-700/20 transition-colors">
             <div className="flex items-center gap-3">
-              <Bookmark className="h-5 w-5 text-amber-400" />
-              <span>Bookmarked Companions</span>
-              <span className="bg-amber-500/20 text-amber-300 px-2 py-1 rounded-full text-sm">
-                {/* {bookmarkedCompanions.length} */} 10
+              <User className="h-5 w-5 text-purple-400" />
+              <span>My Companions</span>
+              <span className="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-sm">
+                {companions.length}
               </span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">
+            <div className="mb-4 flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-slate-300">
+                Created Companions
+              </h3>
+              {companions.length > 0 && (
+                <DeleteButton companions={companions} userId={user.id} />
+              )}
+            </div>
             <CompanionsList
-              // companions={bookmarkedCompanions}
-              title="Your Saved Companions"
+              title=""
+              companions={companions}
               classNames="border-none shadow-none bg-transparent"
+              showDelete={true}
             />
           </AccordionContent>
         </AccordionItem>
 
-        {/* Recent Sessions */}
         <AccordionItem
           value="recent"
           className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/30 overflow-hidden"
@@ -142,47 +148,23 @@ const Profile = async () => {
             />
           </AccordionContent>
         </AccordionItem>
-
-        {/* My Companions */}
-        <AccordionItem
-          value="companions"
-          className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/30 overflow-hidden"
-        >
-          <AccordionTrigger className="text-xl text-purple-100 font-semibold p-6 hover:bg-slate-700/20 transition-colors">
-            <div className="flex items-center gap-3">
-              <User className="h-5 w-5 text-purple-400" />
-              <span>My Companions</span>
-              <span className="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-sm">
-                {companions.length}
-              </span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-6 pb-6">
-            <CompanionsList
-              title="Created Companions"
-              companions={companions}
-              classNames="border-none shadow-none bg-transparent"
-            />
-          </AccordionContent>
-        </AccordionItem>
       </Accordion>
 
-      {/* Empty State if no content */}
-      {/*  {companions.length === 0 &&
-        sessionHistory.length === 0 &&
-        bookmarkedCompanions.length === 0 && (
-          <div className="text-center py-16 bg-slate-800/30 rounded-2xl border border-slate-700/30 mt-8">
-            <BookOpen className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-300 mb-2">
-              Start Your Learning Journey
-            </h3>
-            <p className="text-slate-400 max-w-md mx-auto">
-              You haven't created any companions or started any sessions yet.
-              Begin your voice learning adventure!
-            </p>
-          </div>
-        )} */}
+      {/* Empty State */}
+      {companions.length === 0 && sessionHistory.length === 0 && (
+        <div className="text-center py-16 bg-slate-800/30 rounded-2xl border border-slate-700/30 mt-8">
+          <BookOpen className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-slate-300 mb-2">
+            Start Your Learning Journey
+          </h3>
+          <p className="text-slate-400 max-w-md mx-auto">
+            You haven't created any companions or started any sessions yet.
+            Begin your voice learning adventure!
+          </p>
+        </div>
+      )}
     </main>
   );
 };
+
 export default Profile;

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Bookmark, Clock, Play } from "lucide-react";
+import { Clock, Play } from "lucide-react";
 
 interface CompanionCardProps {
   id: string;
@@ -19,7 +19,6 @@ const CompanionCard = ({
   subject,
   duration,
   color,
-  bookmarked,
 }: CompanionCardProps) => {
   return (
     <article
@@ -36,20 +35,25 @@ const CompanionCard = ({
         >
           {subject}
         </div>
-        <button className="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors">
+        {/* <button
+          className="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors cursor-pointer"
+          onClick={handleBookmark}
+        >
           <Bookmark
             size={16}
             className={
               bookmarked ? "fill-amber-400 text-amber-400" : "text-slate-400"
             }
           />
-        </button>
+        </button> */}
       </div>
 
       <h2 className="text-xl font-bold text-white mb-2 group-hover:text-slate-100 transition-colors">
         {name}
       </h2>
-      <p className="text-slate-400 text-sm mb-4 truncate">{topic}</p>
+      <p className="text-slate-400 text-sm mb-4">
+        {topic.length > 50 ? topic.substring(0, 50) : topic}
+      </p>
 
       <div className="flex items-center gap-2 text-slate-400 mb-5">
         <Clock size={14} />
@@ -58,7 +62,7 @@ const CompanionCard = ({
 
       <Link href={`/companions/${id}`} className="w-full">
         <button
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium text-white transition-all duration-300 hover:gap-3"
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium text-white transition-all duration-300 hover:gap-3 cursor-pointer"
           style={{ backgroundColor: color }}
         >
           <Play size={16} />
