@@ -73,30 +73,6 @@ const CompanionComponent = ({
     const onCallEnd = async () => {
       setCallStatus(CallStatus.FINISHED);
       addToSessionHistory(companionId);
-
-      if (messages.length > 0) {
-        try {
-          const chatTranscript = messages
-            .map((msg) => `${msg.role}: ${msg.content}`)
-            .join("\n");
-          const generatedSummary = await summarizeTranscript(chatTranscript);
-          setSummary(generatedSummary);
-          await saveTranscripts(companionId, chatTranscript, generatedSummary);
-          toast.success(
-            "Conversation transcript and summary saved successfully"
-          );
-        } catch (error) {
-          console.error(
-            "Error saving transcript or generating summary:",
-            error
-          );
-          toast.error(
-            "Failed to save conversation transcript or generate summary"
-          );
-        }
-      } else {
-        console.log("No messages to save.");
-      }
     };
 
     const onMessage = (message: Message) => {
@@ -337,12 +313,6 @@ const CompanionComponent = ({
                   );
                 }
               })}
-              {summary && (
-                <div className="mt-4 p-3 bg-slate-700/50 rounded-xl">
-                  <h4 className="text-slate-300 font-semibold">Summary</h4>
-                  <p className="text-white text-sm">{summary}</p>
-                </div>
-              )}
               <div ref={messagesEndRef} />
             </div>
           )}
