@@ -9,13 +9,19 @@ import {
   getRecentSessions,
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
+import { currentUser } from "@clerk/nextjs/server";
 import { GraduationCap } from "lucide-react";
 import React from "react";
 
 const Homepage = async () => {
   const companions = await getAllCompanions({ limit: 4 });
   const recentSessionCompanions = (await getRecentSessions(10)).flat();
-
+  const user = await currentUser();
+  const username =
+    user?.firstName ||
+    user?.lastName ||
+    `${user?.firstName}-${user?.lastName}` ||
+    "User";
   return (
     <>
       <main className="min-h-screen mt-24 bg-transparent">
@@ -40,7 +46,7 @@ const Homepage = async () => {
 
         <section className="home-section">
           <CompanionsList
-            title="Recently completed Lessons"
+            title={`${username}\u2019s recent Session`}
             companions={recentSessionCompanions}
             classNames="w-2/3 max-lg:w-full"
           />

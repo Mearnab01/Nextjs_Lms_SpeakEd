@@ -21,14 +21,15 @@ import {
   BookOpen,
 } from "lucide-react";
 import { DeleteButton } from "@/components/DeleteButton";
+import { UserBadge } from "@/components/UserBadge";
 
 const Profile = async () => {
   const user = await currentUser();
-
   if (!user) redirect("/sign-in");
 
   const companions = await getUserCompanions(user.id);
   const sessionHistory = (await getUserSessions(user.id)).flat();
+
   return (
     <main className="max-w-6xl mx-auto p-6 mt-40 bg-transparent">
       {/* Header Section */}
@@ -54,8 +55,7 @@ const Profile = async () => {
                 {user.emailAddresses[0].emailAddress}
               </p>
               <div className="flex items-center gap-2 justify-center sm:justify-start mt-2">
-                <Sparkles size={16} className="text-amber-400" />
-                <span className="text-slate-300 text-sm">Active Learner</span>
+                <UserBadge companionsCount={companions.length || 0} />
               </div>
             </div>
           </div>

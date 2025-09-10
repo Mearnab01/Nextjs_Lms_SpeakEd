@@ -52,7 +52,7 @@ const CompanionCard = ({
         {name}
       </h2>
       <p className="text-slate-400 text-sm mb-4">
-        {topic.length > 50 ? topic.substring(0, 50) : topic}
+        {topic.length > 50 ? topic.substring(0, 50) + "..." : topic}
       </p>
 
       <div className="flex items-center gap-2 text-slate-400 mb-5">

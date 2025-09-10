@@ -103,9 +103,12 @@ export const addToSessionHistory = async (companionId: string) => {
 
 export const getRecentSessions = async (limit = 10) => {
   const supabase = createSupabaseClient();
+  const user = await currentUser();
+  if (!user?.id) return [];
   const { data, error } = await supabase
     .from("session_history")
     .select(`companions:companion_id (*)`)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -143,9 +146,7 @@ export const getUserCompanions = async (userId: string) => {
 export const newCompanionPermissions = async () => {
   const { userId, has } = await auth();
   if (!userId) {
-    throw new Error(
-      "Unauthorized: You must be logged in to delete a companion."
-    );
+    throw new Error("Unauthorized: You must be logged in");
   }
   const supabase = createSupabaseClient();
 
@@ -153,8 +154,8 @@ export const newCompanionPermissions = async () => {
 
   if (has({ plan: "pro" })) {
     return true;
-  } else if (has({ feature: "3_companion_limit" })) {
-    limit = 3;
+  } else if (has({ feature: "2_companion_limit" })) {
+    limit = 2;
   } else if (has({ feature: "10_companion_limit" })) {
     limit = 10;
   }
@@ -169,9 +170,9 @@ export const newCompanionPermissions = async () => {
   const companionCount = data?.length;
 
   if (companionCount >= limit) {
-    return false;
+    return { allowed: false, limit };
   } else {
-    return true;
+    return { allowed: true, limit };
   }
 };
 

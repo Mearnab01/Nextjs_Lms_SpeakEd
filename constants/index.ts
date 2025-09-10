@@ -12,7 +12,7 @@ export const subjectsColors = {
   maths: "#FACC15", // Bright amber
   language: "#38BDF8", // Sky blue
   coding: "#F472B6", // Pink
-  history: "#FBBF24", // Warm gold
+  history: "#FF6B6B", // Vibrant coral red
   economics: "#34D399", // Emerald green
 };
 
