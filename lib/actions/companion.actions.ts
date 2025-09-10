@@ -170,9 +170,9 @@ export const newCompanionPermissions = async () => {
   const companionCount = data?.length;
 
   if (companionCount >= limit) {
-    return { allowed: false, limit };
+    return false;
   } else {
-    return { allowed: true, limit };
+    return true;
   }
 };
 
