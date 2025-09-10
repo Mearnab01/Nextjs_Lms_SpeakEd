@@ -59,7 +59,6 @@ const CompanionForm = () => {
     setIsLoading(true);
     try {
       const companion = await createCompanion(values);
-      console.log(companion);
 
       if (companion.id) {
         router.push(`/companions/${companion.id}`);

@@ -2,7 +2,7 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { createSupabaseClient } from "../supabase";
-import { revalidatePath } from "next/cache";
+import { GoogleGenAI } from "@google/genai";
 
 export const createCompanion = async (formData: CreateCompanion) => {
   const user = await currentUser();
@@ -86,14 +86,14 @@ export const getCompanion = async (id: string) => {
 };
 
 export const addToSessionHistory = async (companionId: string) => {
-  const { userId } = await auth();
-  if (!userId) {
-    throw new Error("Unauthorized: You must be logged in");
+  const user = await currentUser();
+  if (!user?.id) {
+    console.warn("Unauthorized: You must be logged in");
   }
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from("session_history").insert({
     companion_id: companionId,
-    user_id: userId,
+    user_id: user?.id,
   });
 
   if (error) throw new Error(error.message);
@@ -172,6 +172,66 @@ export const newCompanionPermissions = async () => {
     return false;
   } else {
     return true;
+  }
+};
+
+// Transcripts
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
+export const saveTranscripts = async (
+  companionId: string,
+  chat: string,
+  summary?: string
+) => {
+  const supabase = createSupabaseClient();
+  const user = await currentUser();
+
+  if (!user?.id) throw new Error("User not logged-in");
+  const { data, error } = await supabase
+    .from("transcripts")
+    .insert({
+      user_id: user.id,
+      companion_id: companionId,
+      transcript: chat,
+      summary: summary || null,
+    })
+    .select();
+
+  if (error) throw new Error(error.message);
+
+  return data[0];
+};
+
+export const getUserTranscripts = async () => {
+  const supabase = createSupabaseClient();
+  const user = await currentUser();
+
+  if (!user?.id) return [];
+
+  const { data, error } = await supabase
+    .from("transcripts")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};
+
+export const summarizeTranscript = async (chat: string) => {
+  try {
+    console.log("Generating summary for transcript:", chat);
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: chat,
+    });
+    console.log("Summary response:", response.text);
+    return response.text || "Summary not available";
+  } catch (error) {
+    console.error("Error summarizing chat:", error);
+    throw new Error("Failed to generate summary");
   }
 };
 
